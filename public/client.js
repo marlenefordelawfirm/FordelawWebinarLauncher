@@ -89,19 +89,24 @@
   async function hydrateState() {
     try {
       const res = await fetch(API_ENDPOINT, { headers: { 'Content-Type': 'application/json' } });
-      if (!res.ok) throw new Error('Failed to fetch remote values');
+      if (!res.ok) throw new Error(`Failed to fetch remote values: ${res.status}`);
       const json = await res.json();
+      console.log('[hydrate] Received values from API:', json.values);
       applyServerValues(json.values);
     } catch (error) {
-      console.warn('[mock] Falling back to default values', error);
+      console.error('[hydrate] Failed to fetch custom values:', error);
     }
   }
 
   function applyServerValues(values) {
-    if (!values || typeof values !== 'object') return;
+    if (!values || typeof values !== 'object') {
+      console.warn('[hydrate] No values to apply:', values);
+      return;
+    }
     KNOWN_KEYS.forEach((key) => {
-      if (values[key] !== undefined && values[key] !== null) {
+      if (values[key] !== undefined && values[key] !== null && values[key] !== '') {
         state[key] = values[key];
+        console.log(`[hydrate] Set ${key} = ${typeof values[key] === 'string' && values[key].length > 50 ? values[key].substring(0, 47) + '...' : values[key]}`);
       }
     });
   }
