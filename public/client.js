@@ -980,6 +980,15 @@
         event.preventDefault();
         const payload = {};
         DATE_FIELD_KEYS.forEach((key) => (payload[key] = getFieldValue(key)));
+
+        // Combine date and time into formatted value (MM-DD-YYYY HH:MM)
+        const isoDate = parseDisplayToIso(payload.webinar_date);
+        const timeValue = payload.webinar_time;
+        if (isoDate && timeValue) {
+          const [year, month, day] = isoDate.split('-');
+          payload.webinar_date_time_formatted = `${month}-${day}-${year} ${timeValue}`;
+        }
+
         await persistValues(payload, 'Webinar date & time saved');
       });
     }
