@@ -24,22 +24,29 @@ app.get('/api/custom-values', async (req, res) => {
     ensureConfig();
     const ids = Object.values(CUSTOM_VALUE_MAP);
     if (!ids.length) {
+      console.warn('[server] No custom value IDs configured in HL_CUSTOM_VALUE_IDS');
       return res.json({ values: {} });
     }
 
     const url = `${API_BASE}/locations/${HL_LOCATION_ID}/customValues?limit=200`;
+    console.log('[server] Fetching from:', url);
     const data = await requestHighLevel(url);
     const values = {};
 
-    if (Array.isArray(data?.data)) {
-      for (const entry of data.data) {
+    if (Array.isArray(data?.customValues)) {
+      console.log(`[server] Found ${data.customValues.length} custom values from GoHighLevel`);
+      for (const entry of data.customValues) {
         const key = findKeyById(entry.id);
         if (key) {
           values[key] = entry.value ?? '';
+          console.log(`[server] Mapped ${key} = ${entry.value || '(empty)'}`);
         }
       }
+    } else {
+      console.warn('[server] No customValues array in response:', data);
     }
 
+    console.log('[server] Returning values:', Object.keys(values).length > 0 ? Object.keys(values).join(', ') : '(none)');
     return res.json({ values });
   } catch (error) {
     console.error('[server] Failed to fetch custom values', error);
