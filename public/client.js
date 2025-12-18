@@ -14,17 +14,17 @@
     'ads_manager'
   ];
   const DEFAULT_VALUES = {
-    webinar_date: '2025-10-30',
-    webinar_time: '19:00',
+    webinar_date: '',
+    webinar_time: '',
     timezone: 'America/New_York',
-    city: 'New York',
-    zoom_link: 'https://us06web.zoom.us/j/9661741676?pwd=clZEeUlkL04zRFRqeTYyWjNqeVpMZz09',
-    host_name: 'Marlene Forde',
-    host_email: 'Marlene@fordelaw.org',
-    domain_name: 'https://newyork.zoomwebinars.net',
-    booking_link: 'https://newyork.zoomwebinars.net/book',
-    canva_template: 'https://www.canva.com/design/DAGVQu5PAKA/05wQ4p-xzPv_IiQKYi9tlQ/edit?utm_content=DAGVQu5PAKA&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
-    ads_manager: 'https://adsmanager.facebook.com/adsmanager/manage/campaigns?act=933243471669854&business_id=470457455676375&nav_entry_point=ads_ecosystem_navigation_menu&nav_source=ads_manager#'
+    city: '',
+    zoom_link: '',
+    host_name: '',
+    host_email: '',
+    domain_name: '',
+    booking_link: '',
+    canva_template: '',
+    ads_manager: ''
   };
   const FIELD_SELECTORS = {
     webinar_date: 'input[placeholder="Select Webinar Date"]',
