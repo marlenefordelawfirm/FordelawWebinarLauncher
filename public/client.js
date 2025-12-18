@@ -1001,7 +1001,9 @@
     if (launchZoom) {
       launchZoom.addEventListener('click', (event) => {
         event.preventDefault();
-        openMock(state.zoom_link, 'zoom');
+        if (state.zoom_link) {
+          window.open(state.zoom_link, '_blank', 'noopener');
+        }
       });
     }
 
@@ -1009,7 +1011,9 @@
     if (openBooking) {
       openBooking.addEventListener('click', (event) => {
         event.preventDefault();
-        openMock(state.booking_link, 'booking');
+        if (state.booking_link) {
+          window.open(state.booking_link, '_blank', 'noopener');
+        }
       });
     }
 
@@ -1030,7 +1034,9 @@
     if (goCanva) {
       goCanva.addEventListener('click', (event) => {
         event.preventDefault();
-        openMock(state.canva_template, 'canva');
+        if (state.canva_template) {
+          window.open(state.canva_template, '_blank', 'noopener');
+        }
       });
     }
 
@@ -1038,7 +1044,9 @@
     if (goAds) {
       goAds.addEventListener('click', (event) => {
         event.preventDefault();
-        openMock(state.ads_manager, 'ads');
+        if (state.ads_manager) {
+          window.open(state.ads_manager, '_blank', 'noopener');
+        }
       });
     }
   }
@@ -1085,12 +1093,6 @@
 
   function findButton(text) {
     return findButtonsByText(text)[0] || null;
-  }
-
-  function openMock(target, page) {
-    const href = target || '#';
-    const url = `mocks/${page}.html?target=${encodeURIComponent(href)}`;
-    window.open(url, '_blank', 'noopener');
   }
 
   function getPageProps() {
