@@ -109,6 +109,60 @@
         console.log(`[hydrate] Set ${key} = ${typeof values[key] === 'string' && values[key].length > 50 ? values[key].substring(0, 47) + '...' : values[key]}`);
       }
     });
+
+    // Post-process values to handle mappings and extractions
+    normalizeIncomingValues(values);
+  }
+
+  function normalizeIncomingValues(values) {
+    // Map timezone abbreviations to timezone values
+    if (values.timezone && !values.timezone.includes('/')) {
+      const tzMap = {
+        'EST': 'America/New_York',
+        'ET': 'America/New_York',
+        'CST': 'America/Chicago',
+        'CT': 'America/Chicago',
+        'MST': 'America/Denver',
+        'MT': 'America/Denver',
+        'PST': 'America/Los_Angeles',
+        'PT': 'America/Los_Angeles',
+        'HST': 'Pacific/Honolulu',
+        'HT': 'Pacific/Honolulu',
+        'AKST': 'America/Juneau',
+        'AKT': 'America/Juneau',
+        'NST': 'America/St_Johns',
+        'AST': 'America/Glace_Bay',
+        'AT': 'America/Glace_Bay'
+      };
+      const mappedTz = tzMap[values.timezone.toUpperCase()];
+      if (mappedTz) {
+        state.timezone = mappedTz;
+        console.log(`[hydrate] Mapped timezone "${values.timezone}" to "${mappedTz}"`);
+      }
+    }
+
+    // Extract date from webinar_date_time_formatted if webinar_date is empty
+    if ((!values.webinar_date || values.webinar_date === '') && values.webinar_date_time_formatted) {
+      const formatted = values.webinar_date_time_formatted;
+      const match = formatted.match(/^(\d{2})-(\d{2})-(\d{4})/);
+      if (match) {
+        const [, month, day, year] = match;
+        const isoDate = `${year}-${month}-${day}`;
+        state.webinar_date = isoDate;
+        console.log(`[hydrate] Extracted date from formatted value: "${isoDate}"`);
+      }
+    }
+
+    // Extract time from webinar_date_time_formatted if webinar_time is empty
+    if ((!values.webinar_time || values.webinar_time === '') && values.webinar_date_time_formatted) {
+      const formatted = values.webinar_date_time_formatted;
+      const match = formatted.match(/(\d{2}):(\d{2})$/);
+      if (match) {
+        const [, hour, minute] = match;
+        state.webinar_time = `${hour}:${minute}`;
+        console.log(`[hydrate] Extracted time from formatted value: "${hour}:${minute}"`);
+      }
+    }
   }
 
   function applyStateToInputs() {
